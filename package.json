@@ -1,0 +1,12 @@
+{
+  "name": "survey",
+  "version": "1.0.0",
+  "description": "\"Apartment Survey App\"",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"node server.js"
+  },
+  "author": "\"ebuka obukwelu\"",
+  "license": "ISC"
+}

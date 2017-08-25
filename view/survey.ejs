@@ -1,0 +1,335 @@
+<html lang="en" >
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Angular Material style sheet -->
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha256-NuCn4IvuZXdBaFKJOAcsU2Q3ZpwbdFisd5dux4jkQ5w=" crossorigin="anonymous" />
+  <link href="/css/style.css" rel="stylesheet">
+   <link href="/css/tabs.css" rel="stylesheet">
+</head>
+<body ng-app="App" ng-cloak>
+  <!--
+    Your HTML content here
+  -->  
+  <div ng-controller="AppCtrl" ng-cloak="" class="tabsdemoStaticTabs" ng-app="MyApp">
+  <md-content class="md-padding">
+    <md-tabs class="md-accent" md-selected="data.selectedIndex" md-align-tabs="{{data.bottom ? 'bottom' : 'top'}}">
+      <md-tab id="tab1">
+        <md-tab-label>Task</md-tab-label>
+      </md-tab>
+      <md-tab id="tab2">
+        <md-tab-label>{{data.secondLabel}}</md-tab-label>
+      </md-tab>
+       </md-content>
+
+
+  <ng-switch on="data.selectedIndex" class="tabpanel-container">
+    <div role="tabpanel" id="tab1-content" aria-labelledby="tab1" ng-switch-when="0" md-swipe-left="next()" md-swipe-right="previous()">
+     
+    <form ng-submit="$event.preventDefault()" ng-controller="SearchCtrl as ctrl">
+      <p>Enter Customer Address</p>
+      <md-autocomplete
+          ng-disabled="ctrl.isDisabled"
+          md-no-cache="ctrl.noCache"
+          md-selected-item="ctrl.selectedItem"
+          md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+          md-search-text="ctrl.searchText"
+          md-selected-item-change="ctrl.selectedItemChange(item)"
+          md-items="item in ctrl.querySearch(ctrl.searchText)"
+          md-item-text="item.name"
+          md-min-length="0"
+          placeholder="Enter Customer Address"
+          md-menu-class="autocomplete-custom-template">
+        <md-item-template>
+          <span class="item-title">
+            <md-icon md-svg-icon="img/icons/octicon-repo.svg"></md-icon>
+            <span> {{item.name}} </span>
+          </span>
+          <span class="item-metadata">
+            <span>
+              <strong>{{item.watchers}}</strong> watchers
+            </span>
+            <span>
+              <strong>{{item.forks}}</strong> forks
+            </span>
+          </span>
+        </md-item-template>
+      </md-autocomplete>
+    </form>
+
+  </div>
+    <div role="tabpanel" id="tab2-content" aria-labelledby="tab2" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()">
+    <div ng-controller="settingsCtrl">
+    <md-button class="md-raised md-primary" >{{loadData}}</md-button>
+
+    <md-button class="md-raised md-primary">Sync</md-button>
+    </div>
+    </div>
+   
+  </ng-switch>
+
+  <!--
+Copyright 2016 Google Inc. All Rights Reserved. 
+Use of this source code is governed by an MIT-style license that can be in foundin the LICENSE file at https://material.angularjs.org/license.
+-->
+  <!-- Angular Material requires Angular.js Libraries -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+  <!-- Angular Material Library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+  <script async defer src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad();var SCOPES = 'https://www.googleapis.com/auth/drive'; var CLIENT_ID = '356762020280-jckfmat91eh4a51vl79qunarc3j1gj61.apps.googleusercontent.com'; function handleClientLoad() { gapi.load('client:auth2', initClient) }; function initClient() { gapi.client.init({clientId: CLIENT_ID, scope: SCOPES })}"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
+        var CLIENT_ID = '356762020280-jckfmat91eh4a51vl79qunarc3j1gj61.apps.googleusercontent.com';
+ /**
+       *  On load, called to load the auth2 library and API client library.
+       */
+      function handleClientLoad() {
+        gapi.load('client:auth2', initClient);
+      }
+
+      /**
+       *  Initializes the API client library and sets up sign-in state
+       *  listeners.
+       */
+      function initClient() {
+        gapi.client.init({
+          clientId: CLIENT_ID
+        })
+      }
+    </script>
+  <!-- Your application bootstrap  -->
+  <script type="text/javascript">    
+    /**
+     * You must include the dependency on 'ngMaterial' 
+     */
+ 
+  angular
+      .module('App',['ngAnimate', 'ngAria', 'ngMaterial', 'ngMessages'])
+      .controller('AppCtrl', AppCtrl)
+      .controller("SearchCtrl",SearchContoller)
+      .controller("settingsCtrl",settingsController)
+      .factory("loadData",loadFactory)
+      
+  function AppCtrl ($scope, $log) {
+  $scope.data = {
+      selectedIndex: 0,
+      secondLocked:  true,
+      secondLabel:   "Settings",
+      bottom:        false
+    };
+    $scope.next = function() {
+      $scope.data.selectedIndex = Math.min($scope.data.selectedIndex + 1, 1) ;
+      
+    };
+    $scope.previous = function() {
+      $scope.data.selectedIndex = Math.max($scope.data.selectedIndex - 1, 0);
+    };
+  }
+
+  function SearchContoller($timeout, $q, $log, $http){
+    var self = this;
+
+    self.simulateQuery = false;
+    self.isDisabled    = false;
+
+    self.repos         = loadAll();
+    self.querySearch   = querySearch;
+    self.selectedItemChange = selectedItemChange;
+    self.searchTextChange   = searchTextChange;
+
+    /**
+     * Search for repos... use $timeout to simulate
+     * remote dataservice call.
+     */
+    function querySearch (query) {
+      var results = query ? self.repos.filter( createFilterFor(query) ) : self.repos,
+          deferred;
+      if (self.simulateQuery) {
+        deferred = $q.defer();
+        $timeout(function () { deferred.resolve( results ); }, Math.random() * 1000, false);
+        return deferred.promise;
+      } else {
+        return results;
+      }
+    }
+
+    function searchTextChange(text) {
+      $log.info('Text changed to ' + text);
+    }
+
+    function selectedItemChange(item) {
+      $log.info('Item changed to ' + JSON.stringify(item));
+    }
+   
+   
+  
+    /**
+     * Build `components` list of key/value pairs
+     */
+    function loadAll() {
+      var repos = [
+        {
+          'name'      : 'AngularJS',
+          'url'       : 'https://github.com/angular/angular.js',
+          'watchers'  : '3,623',
+          'forks'     : '16,175',
+        },
+        {
+          'name'      : 'Angular',
+          'url'       : 'https://github.com/angular/angular',
+          'watchers'  : '469',
+          'forks'     : '760',
+        },
+        {
+          'name'      : 'AngularJS Material',
+          'url'       : 'https://github.com/angular/material',
+          'watchers'  : '727',
+          'forks'     : '1,241',
+        },
+        {
+          'name'      : 'Angular Material',
+          'url'       : 'https://github.com/angular/material2',
+          'watchers'  : '727',
+          'forks'     : '1,241',
+        },
+        {
+          'name'      : 'Bower Material',
+          'url'       : 'https://github.com/angular/bower-material',
+          'watchers'  : '42',
+          'forks'     : '84',
+        },
+        {
+          'name'      : 'Material Start',
+          'url'       : 'https://github.com/angular/material-start',
+          'watchers'  : '81',
+          'forks'     : '303',
+        }
+      ];
+      return repos.map( function (repo) {
+        repo.value = repo.name.toLowerCase();
+        return repo;
+      });
+    }
+
+    /**
+     * Create filter function for a query string
+     */
+    function createFilterFor(query) {
+      var lowercaseQuery = angular.lowercase(query);
+
+      return function filterFn(item) {
+        return (item.value.indexOf(lowercaseQuery) === 0);
+      };
+
+    }
+  }
+
+  function settingsController($scope, $http, loadData){
+ $scope.loadData = loadData;
+   }
+
+function loadFactory(){
+      // Client ID and API key from the Developer Console
+      var CLIENT_ID = '356762020280-jckfmat91eh4a51vl79qunarc3j1gj61.apps.googleusercontent.com';
+ /**
+       *  On load, called to load the auth2 library and API client library.
+       */
+      function handleClientLoad() {
+        gapi.load('client:auth2', initClient);
+      }
+
+      /**
+       *  Initializes the API client library and sets up sign-in state
+       *  listeners.
+       */
+      function initClient() {
+        gapi.client.init({
+          clientId: CLIENT_ID
+        })
+      }
+
+   function appendPre(message) {
+        var pre = document.getElementById('content');
+        var textContent = document.createTextNode(message + '\n');
+        pre.appendChild(textContent);
+      }
+
+
+   /**
+       * Load the API and make an API call.  Display the results on the screen.
+       */
+      function callScriptFunction() {
+        var scriptId = "MOZ1GvHbrM9tKDYIA95sKF_TkCZgkOAXv";
+
+        // Call the Execution API run method
+        //   'scriptId' is the URL parameter that states what script to run
+        //   'resource' describes the run request body (with the function name
+        //              to execute)
+        gapi.client.script.scripts.run({
+          'scriptId': scriptId,
+          'resource': {
+            'function': 'test'
+          }
+        }).then(function(resp) {
+          var result = resp.result;
+          if (result.error && result.error.status) {
+            // The API encountered a problem before the script
+            // started executing.
+            appendPre('Error calling API:');
+            appendPre(JSON.stringify(result, null, 2));
+          } else if (result.error) {
+            // The API executed, but the script returned an error.
+
+            // Extract the first (and only) set of error details.
+            // The values of this object are the script's 'errorMessage' and
+            // 'errorType', and an array of stack trace elements.
+            var error = result.error.details[0];
+            appendPre('Script error message: ' + error.errorMessage);
+
+            if (error.scriptStackTraceElements) {
+              // There may not be a stacktrace if the script didn't start
+              // executing.
+              appendPre('Script error stacktrace:');
+              for (var i = 0; i < error.scriptStackTraceElements.length; i++) {
+                var trace = error.scriptStackTraceElements[i];
+                appendPre('\t' + trace.function + ':' + trace.lineNumber);
+              }
+            }
+          } else {
+            // The structure of the result will depend upon what the Apps
+            // Script function returns. Here, the function returns an Apps
+            // Script Object with String keys and values, and so the result
+            // is treated as a JavaScript object (folderSet).
+
+            console.log("see response: "+result)
+          }
+        });
+      }
+  }
+</script>
+
+<script>
+if("serviceWorker" in navigator){
+    navigator.serviceWorker
+             .register('/js/sw.js')
+             .then(function() { console.log('Service Worker Registered'); });
+
+
+}
+</script>
+ 
+</body>
+</html>
+
+<!--
+Copyright 2016 Google Inc. All Rights Reserved. 
+Use of this source code is governed by an MIT-style license that can be in foundin the LICENSE file at https://material.angularjs.org/license.
+-->
+
+
+
